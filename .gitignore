@@ -1,13 +1,18 @@
 *.tar.gz
 
 *.exe
-src/monacoin
 src/monacoind
 src/monacoin-cli
 src/monacoin-tx
 src/test/test_monacoin
 src/test/test_monacoin_fuzzy
 src/qt/test/test_monacoin-qt
+src/shitcoind
+src/shitcoin-cli
+src/shitcoin-tx
+src/test/test_shitcoin
+src/test/test_shitcoin_fuzzy
+src/qt/test/test_shitcoin-qt
 
 # autoreconf
 Makefile.in
@@ -75,7 +80,9 @@ src/qt/test/moc*.cpp
 *.qm
 Makefile
 monacoin-qt
+shitcoin-qt
 Monacoin-Qt.app
+Shitcoin-Qt.app
 
 # Unit-tests
 Makefile.test
@@ -108,4 +115,5 @@ test/cache/*
 /doc/doxygen/
 
 libbitcoinconsensus.pc
+libshitcoinconsensus.pc
 contrib/devtools/split-debug.sh
