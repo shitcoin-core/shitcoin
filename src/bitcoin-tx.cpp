@@ -54,10 +54,10 @@ static int AppInitRawTx(int argc, char* argv[])
     if (argc<2 || gArgs.IsArgSet("-?") || gArgs.IsArgSet("-h") || gArgs.IsArgSet("-help"))
     {
         // First part of help message is specific to this utility
-        std::string strUsage = strprintf(_("%s monacoin-tx utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
+        std::string strUsage = strprintf(_("%s shitcoin utility version"), _(PACKAGE_NAME)) + " " + FormatFullVersion() + "\n\n" +
             _("Usage:") + "\n" +
-              "  monacoin-tx [options] <hex-tx> [commands]  " + _("Update hex-encoded monacoin transaction") + "\n" +
-              "  monacoin-tx [options] -create [commands]   " + _("Create hex-encoded monacoin transaction") + "\n" +
+              "  shitcoin [options] <hex-tx> [commands]  " + _("Update hex-encoded shitcoin transaction") + "\n" +
+              "  shitcoin [options] -create [commands]   " + _("Create hex-encoded shitcoin transaction") + "\n" +
               "\n";
 
         fprintf(stdout, "%s", strUsage.c_str());
@@ -612,7 +612,7 @@ static void MutateTxSign(CMutableTransaction& tx, const std::string& flagStr)
 
             // if redeemScript given and private keys given,
             // add redeemScript to the tempKeystore so it can be signed:
-            if ((scriptPubKey.IsPayToScriptHash() || scriptPubKey.IsPayToWitnessScriptHash()) &&
+            if ((scriptPubKey.IsPayToScriptHash(true) || scriptPubKey.IsPayToWitnessScriptHash(true)) &&
                 prevOut.exists("redeemScript")) {
                 UniValue v = prevOut["redeemScript"];
                 std::vector<unsigned char> rsData(ParseHexUV(v, "redeemScript"));
