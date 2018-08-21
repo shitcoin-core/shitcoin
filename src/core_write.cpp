@@ -7,6 +7,9 @@
 #include "base58.h"
 #include "consensus/consensus.h"
 #include "consensus/validation.h"
+#include "names/common.h"
+#include "primitives/transaction.h"
+#include "script/names.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "serialize.h"
@@ -134,6 +137,47 @@ void ScriptPubKeyToUniv(const CScript& scriptPubKey,
     txnouttype type;
     std::vector<CTxDestination> addresses;
     int nRequired;
+
+		const CNameScript nameOp(scriptPubKey);
+    if (nameOp.isNameOp ())
+    {
+        UniValue jsonOp(UniValue::VOBJ);
+        switch (nameOp.getNameOp ())
+        {
+        case OP_NAME_NEW:
+            jsonOp.pushKV ("op", "name_new");
+            jsonOp.pushKV ("hash", HexStr (nameOp.getOpHash ()));
+            break;
+
+        case OP_NAME_FIRSTUPDATE:
+        {
+            const std::string name = ValtypeToString (nameOp.getOpName ());
+            const std::string value = ValtypeToString (nameOp.getOpValue ());
+
+            jsonOp.pushKV ("op", "name_firstupdate");
+            jsonOp.pushKV ("name", name);
+            jsonOp.pushKV ("value", value);
+            jsonOp.pushKV ("rand", HexStr (nameOp.getOpRand ()));
+            break;
+        }
+
+        case OP_NAME_UPDATE:
+        {
+            const std::string name = ValtypeToString (nameOp.getOpName ());
+            const std::string value = ValtypeToString (nameOp.getOpValue ());
+
+            jsonOp.pushKV ("op", "name_update");
+            jsonOp.pushKV ("name", name);
+            jsonOp.pushKV ("value", value);
+            break;
+        }
+
+        default:
+            assert (false);
+        }
+
+        out.pushKV ("nameOp", jsonOp);
+    }
 
     out.pushKV("asm", ScriptToAsmStr(scriptPubKey));
     if (fIncludeHex)
