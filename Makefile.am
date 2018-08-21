@@ -14,7 +14,7 @@ export PYTHONPATH
 
 if BUILD_BITCOIN_LIBS
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libbitcoinconsensus.pc
+pkgconfig_DATA = libshitcoinconsensus.pc
 endif
 
 BITCOIND_BIN=$(top_builddir)/src/$(BITCOIN_DAEMON_NAME)$(EXEEXT)
@@ -221,10 +221,8 @@ EXTRA_DIST = $(DIST_SHARE) test/functional/test_runner.py test/functional $(DIST
 EXTRA_DIST += \
     test/util/bitcoin-util-test.py \
     test/util/data/bitcoin-util-test.json \
-    test/util/data/blanktxv1.hex \
-    test/util/data/blanktxv1.json \
-    test/util/data/blanktxv2.hex \
-    test/util/data/blanktxv2.json \
+    test/util/data/blanktxv.hex \
+    test/util/data/blanktxv.json \
     test/util/data/tt-delin1-out.hex \
     test/util/data/tt-delin1-out.json \
     test/util/data/tt-delout1-out.hex \
@@ -267,9 +265,8 @@ EXTRA_DIST += \
     test/util/data/txcreatescript3.json \
     test/util/data/txcreatescript4.hex \
     test/util/data/txcreatescript4.json \
-    test/util/data/txcreatesignv1.hex \
-    test/util/data/txcreatesignv1.json \
-    test/util/data/txcreatesignv2.hex
+    test/util/data/txcreatesignv.hex \
+    test/util/data/txcreatesignv.json
 
 CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
 
