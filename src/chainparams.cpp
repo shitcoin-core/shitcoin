@@ -184,6 +184,10 @@ public:
             0.0     // * estimated number of transactions per second after that timestamp
         };
     }
+    int DefaultCheckNameDB () const
+		{
+        return -1;
+    }
 };
 
 /**
