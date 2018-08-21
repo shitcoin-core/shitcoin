@@ -327,7 +327,14 @@ bool CBitcoinSecret::IsValid(bool bOldPrefix) const
 
 bool CBitcoinSecret::SetString(const char* pszSecret, bool bOldPrefix)
 {
-    return CBase58Data::SetString(pszSecret) && IsValid(bOldPrefix);
+    if (!CBase58Data::SetString(pszSecret))
+        return false;
+
+    /* Special case:  The old client used Bitcoin's secret key version
+       for private keys.  Accept that as well when importing.  */
+    if (vchVersion.size() == 1 && vchVersion[0] == 128)
+      vchVersion = Params().Base58Prefix(CChainParams::SECRET_KEY);
+    return IsValid();
 }
 
 bool CBitcoinSecret::SetString(const std::string& strSecret, bool bOldPrefix)
