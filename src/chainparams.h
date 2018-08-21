@@ -11,8 +11,10 @@
 #include "primitives/block.h"
 #include "protocol.h"
 
+#include <map>
 #include <memory>
 #include <vector>
+#include <utility>
 
 struct CDNSSeedData {
     std::string host;
@@ -68,6 +70,8 @@ public:
     const CBlock& GenesisBlock() const { return genesis; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool DefaultConsistencyChecks() const { return fDefaultConsistencyChecks; }
+    /** Default value for -checknamedb argument */
+    virtual int DefaultCheckNameDB() const = 0;
     /** Policy: Filter transactions that do not match well-defined patterns */
     bool RequireStandard() const { return fRequireStandard; }
     uint64_t PruneAfterHeight() const { return nPruneAfterHeight; }
@@ -81,6 +85,11 @@ public:
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     const ChainTxData& TxData() const { return chainTxData; }
     void UpdateVersionBitsParameters(Consensus::DeploymentPos d, int64_t nStartTime, int64_t nTimeout);
+    /* Check whether the given tx is a "historic relic" for which to
+       skip the validity check.  Return also the "type" of the bug,
+       which determines further actions.  */
+    /* FIXME: Move to consensus params!  */
+    bool IsHistoricBug(const uint256& txid, unsigned nHeight, BugType& type) const;
 
     int SwitchKGWblock() const { return nSwitchKGWblock; }
     int SwitchDIGIblock() const { return nSwitchDIGIblock; }
