@@ -37,7 +37,7 @@ if ENABLE_ZMQ
 LIBBITCOIN_ZMQ=libbitcoin_zmq.a
 endif
 if BUILD_BITCOIN_LIBS
-LIBBITCOINCONSENSUS=libbitcoinconsensus.la
+LIBBITCOINCONSENSUS=libshitcoinconsensus.la
 endif
 if ENABLE_WALLET
 LIBBITCOIN_WALLET=libbitcoin_wallet.a
@@ -66,11 +66,11 @@ TESTS =
 BENCHMARKS =
 
 if BUILD_BITCOIND
-  bin_PROGRAMS += monacoind
+  bin_PROGRAMS += shitcoind
 endif
 
 if BUILD_BITCOIN_UTILS
-  bin_PROGRAMS += monacoin-cli monacoin-tx
+  bin_PROGRAMS += shitcoin-cli shitcoin-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
@@ -78,6 +78,7 @@ endif
 BITCOIN_CORE_H = \
   addrdb.h \
   addrman.h \
+	auxpow.h \
   alert.h \
   base58.h \
   bignum.h \
@@ -113,6 +114,8 @@ BITCOIN_CORE_H = \
   memusage.h \
   merkleblock.h \
   miner.h \
+	names/common.h \
+	names/main.h \
   net.h \
   net_processing.h \
   netaddress.h \
@@ -199,6 +202,7 @@ libbitcoin_server_a_SOURCES = \
   dbwrapper.cpp \
   merkleblock.cpp \
   miner.cpp \
+	names/main.cpp \
   net.cpp \
   net_processing.cpp \
   noui.cpp \
@@ -210,6 +214,7 @@ libbitcoin_server_a_SOURCES = \
   rpc/blockchain.cpp \
   rpc/mining.cpp \
   rpc/misc.cpp \
+	rpc/names.cpp \
   rpc/net.cpp \
   rpc/rawtransaction.cpp \
   rpc/server.cpp \
@@ -245,6 +250,7 @@ libbitcoin_wallet_a_SOURCES = \
   wallet/db.cpp \
   wallet/feebumper.cpp \
   wallet/rpcdump.cpp \
+	wallet/rpcnames.cpp \
   wallet/rpcwallet.cpp \
   wallet/wallet.cpp \
   wallet/walletdb.cpp \
@@ -295,13 +301,17 @@ libbitcoin_consensus_a_SOURCES = \
   prevector.h \
   primitives/block.cpp \
   primitives/block.h \
+	primitives/pureheader.cpp \
+	primitives/pureheader.h \
   primitives/transaction.cpp \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/bitcoinconsensus.cpp \
+  script/shitcoinconsensus.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
+	script/names.cpp \
+	script/names.h \
   script/script.cpp \
   script/script.h \
   script/script_error.cpp \
@@ -338,6 +348,7 @@ libbitcoin_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_common_a_SOURCES = \
   alert.cpp \
+	auxpow.cpp \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
@@ -346,6 +357,7 @@ libbitcoin_common_a_SOURCES = \
   core_write.cpp \
   key.cpp \
   keystore.cpp \
+	names/common.cpp \
   netaddress.cpp \
   netbase.cpp \
   policy/feerate.cpp \
@@ -395,16 +407,16 @@ nodist_libbitcoin_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
 # bitcoind binary #
-monacoind_SOURCES = bitcoind.cpp
-monacoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-monacoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-monacoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+shitcoind_SOURCES = shitcoind.cpp
+shitcoind_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+shitcoind_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+shitcoind_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-monacoind_SOURCES += bitcoind-res.rc
+shitcoind_SOURCES += bitcoind-res.rc
 endif
 
-monacoind_LDADD = \
+shitcoind_LDADD = \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
   $(LIBUNIVALUE) \
@@ -418,38 +430,38 @@ monacoind_LDADD = \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-monacoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+shitcoind_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
 # bitcoin-cli binary #
-monacoin_cli_SOURCES = bitcoin-cli.cpp
-monacoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
-monacoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-monacoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+shitcoin_cli_SOURCES = shitcoin-cli.cpp
+shitcoin_cli_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(EVENT_CFLAGS)
+shitcoin_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+shitcoin_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-monacoin_cli_SOURCES += bitcoin-cli-res.rc
+shitcoin_cli_SOURCES += bitcoin-cli-res.rc
 endif
 
-monacoin_cli_LDADD = \
+shitcoin_cli_LDADD = \
   $(LIBBITCOIN_CLI) \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_UTIL) \
   $(LIBBITCOIN_CRYPTO)
 
-monacoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+shitcoin_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
 # bitcoin-tx binary #
-monacoin_tx_SOURCES = bitcoin-tx.cpp
-monacoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-monacoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-monacoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+shitcoin_tx_SOURCES = shitcoin-tx.cpp
+shitcoin_tx_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+shitcoin_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+shitcoin_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-monacoin_tx_SOURCES += bitcoin-tx-res.rc
+shitcoin_tx_SOURCES += bitcoin-tx-res.rc
 endif
 
-monacoin_tx_LDADD = \
+shitcoin_tx_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_COMMON) \
   $(LIBBITCOIN_UTIL) \
@@ -457,22 +469,22 @@ monacoin_tx_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-monacoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+shitcoin_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# bitcoinconsensus library #
+# shitcoinconsensus library #
 if BUILD_BITCOIN_LIBS
-include_HEADERS = script/bitcoinconsensus.h
-libbitcoinconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_a_SOURCES) $(libbitcoin_consensus_a_SOURCES)
+include_HEADERS = script/shitcoinconsensus.h
+libshitcoinconsensus_la_SOURCES = $(crypto_libbitcoin_crypto_a_SOURCES) $(libbitcoin_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
-  libbitcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libshitcoinconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libbitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libbitcoinconsensus_la_LIBADD = $(LIBSECP256K1) $(CRYPTO_LIBS)
-libbitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL $(SSL_CFLAGS)
-libbitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libshitcoinconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
+libshitcoinconsensus_la_LIBADD = $(LIBSECP256K1) $(CRYPTO_LIBS)
+libshitcoinconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_BITCOIN_INTERNAL $(SSL_CFLAGS)
+libshitcoinconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #
