@@ -283,6 +283,10 @@ public:
 
 
     }
+    int DefaultCheckNameDB () const
+		{
+        return -1;
+    }
 };
 
 /**
@@ -365,6 +369,10 @@ public:
         base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
 
         base58Prefixes[OLD_SECRET_KEY] = std::vector<unsigned char>(1,239);
+    }
+    int DefaultCheckNameDB () const
+		{
+        return -1;
     }
 };
 
