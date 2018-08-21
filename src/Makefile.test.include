@@ -2,11 +2,11 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-TESTS += test/test_monacoin
-bin_PROGRAMS += test/test_monacoin
-noinst_PROGRAMS += test/test_monacoin_fuzzy
+TESTS += test/test_shitcoin
+bin_PROGRAMS += test/test_shitcoin
+noinst_PROGRAMS += test/test_shitcoin_fuzzy
 TEST_SRCDIR = test
-TEST_BINARY=test/test_monacoin$(EXEEXT)
+TEST_BINARY=test/test_shitcoin$(EXEEXT)
 
 JSON_TEST_FILES = \
   test/data/script_tests.json \
@@ -28,6 +28,7 @@ BITCOIN_TESTS =\
   test/addrman_tests.cpp \
   test/amount_tests.cpp \
   test/allocator_tests.cpp \
+	test/auxpow_tests.cpp \
   test/base32_tests.cpp \
   test/base58_tests.cpp \
   test/base64_tests.cpp \
@@ -50,6 +51,7 @@ BITCOIN_TESTS =\
   test/merkle_tests.cpp \
   test/miner_tests.cpp \
   test/multisig_tests.cpp \
+	test/name_tests.cpp
   test/net_tests.cpp \
   test/netbase_tests.cpp \
   test/pmt_tests.cpp \
@@ -93,31 +95,31 @@ BITCOIN_TESTS += \
   wallet/test/crypto_tests.cpp
 endif
 
-test_test_monacoin_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
-test_test_monacoin_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
-test_test_monacoin_LDADD =
+test_test_shitcoin_SOURCES = $(BITCOIN_TESTS) $(JSON_TEST_FILES) $(RAW_TEST_FILES)
+test_test_shitcoin_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) -I$(builddir)/test/ $(TESTDEFS) $(EVENT_CFLAGS)
+test_test_shitcoin_LDADD =
 if ENABLE_WALLET
-test_test_monacoin_LDADD += $(LIBBITCOIN_WALLET)
+test_test_shitcoin_LDADD += $(LIBBITCOIN_WALLET)
 endif
-test_test_monacoin_LDADD += $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) \
+test_test_shitcoin_LDADD += $(LIBBITCOIN_SERVER) $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CONSENSUS) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) \
   $(LIBLEVELDB) $(LIBLEVELDB_SSE42) $(LIBMEMENV) $(BOOST_LIBS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB) $(LIBSECP256K1) $(EVENT_LIBS) $(EVENT_PTHREADS_LIBS)
-test_test_monacoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_test_shitcoin_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
-test_test_monacoin_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
-test_test_monacoin_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
+test_test_shitcoin_LDADD += $(LIBBITCOIN_CONSENSUS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS)
+test_test_shitcoin_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS) -static
 
 if ENABLE_ZMQ
-test_test_monacoin_LDADD += $(ZMQ_LIBS)
+test_test_shitcoin_LDADD += $(ZMQ_LIBS)
 endif
 #
 
 # test_bitcoin_fuzzy binary #
-test_test_monacoin_fuzzy_SOURCES = test/test_bitcoin_fuzzy.cpp
-test_test_monacoin_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-test_test_monacoin_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-test_test_monacoin_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+test_test_shitcoin_fuzzy_SOURCES = test/test_bitcoin_fuzzy.cpp
+test_test_shitcoin_fuzzy_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
+test_test_shitcoin_fuzzy_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+test_test_shitcoin_fuzzy_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
-test_test_monacoin_fuzzy_LDADD = \
+test_test_shitcoin_fuzzy_LDADD = \
   $(LIBUNIVALUE) \
   $(LIBBITCOIN_SERVER) \
   $(LIBBITCOIN_COMMON) \
@@ -126,10 +128,10 @@ test_test_monacoin_fuzzy_LDADD = \
   $(LIBBITCOIN_CRYPTO) \
   $(LIBSECP256K1)
 
-test_test_monacoin_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+test_test_shitcoin_fuzzy_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-nodist_test_test_monacoin_SOURCES = $(GENERATED_TEST_FILES)
+nodist_test_test_shitcoin_SOURCES = $(GENERATED_TEST_FILES)
 
 $(BITCOIN_TESTS): $(GENERATED_TEST_FILES)
 
@@ -137,13 +139,13 @@ CLEAN_BITCOIN_TEST = test/*.gcda test/*.gcno $(GENERATED_TEST_FILES)
 
 CLEANFILES += $(CLEAN_BITCOIN_TEST)
 
-bitcoin_test: $(TEST_BINARY)
+shitcoin_test: $(TEST_BINARY)
 
-bitcoin_test_check: $(TEST_BINARY) FORCE
+shitcoin_test_check: $(TEST_BINARY) FORCE
 	$(MAKE) check-TESTS TESTS=$^
 
-bitcoin_test_clean : FORCE
-	rm -f $(CLEAN_BITCOIN_TEST) $(test_test_bitcoin_OBJECTS) $(TEST_BINARY)
+shitcoin_test_clean : FORCE
+	rm -f $(CLEAN_BITCOIN_TEST) $(test_test_shitcoin_OBJECTS) $(TEST_BINARY)
 
 check-local:
 	@echo "Running test/util/bitcoin-util-test.py..."
