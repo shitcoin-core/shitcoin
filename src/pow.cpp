@@ -179,8 +179,16 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     // Only change once per difficulty adjustment interval
     if ((pindexLast->nHeight+1) % adjustmentInterval != 0)
     {
-        if (params.fPowAllowMinDifficultyBlocks)
+        if (params.AllowMinDifficultyBlocks(pblock->GetBlockTime()))
         {
+            /* khal's port of this code from Bitcoin to the old namecoind
+               has a bug:  Comparison of block times is done by an unsigned
+               difference.  Consequently, the minimum difficulty is also
+               applied if the block's timestamp is earlier than the preceding
+               block's.  Reproduce this.  */
+            if (pblock->GetBlockTime() < pindexLast->GetBlockTime())
+                return nProofOfWorkLimit;
+
             // Special difficulty rule for testnet:
             // If the new block's timestamp is more than 2* 10 minutes
             // then allow mining of a min-difficulty block.
@@ -197,6 +205,12 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
         }
         return pindexLast->nBits;
     }
+    /* Adapt the retargeting interval after merge-mining start
+       according to the changed Namecoin rules.  */
+    int nBlocksBack = params.DifficultyAdjustmentInterval() - 1;
+    if (pindexLast->nHeight >= params.nAuxpowStartHeight
+        && (pindexLast->nHeight + 1 > params.DifficultyAdjustmentInterval()))
+        nBlocksBack = params.DifficultyAdjustmentInterval();
 
     // Go back by what we want to be 14 days worth of blocks
     // Monacoin: This fixes an issue where a 51% attack can change difficulty at will.
