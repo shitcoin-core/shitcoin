@@ -20,12 +20,7 @@ uint256 CBlockHeader::GetHash() const
 uint256 CBlockHeader::GetPoWHash(bool bLyra2REv2) const
 {
     uint256 thash;
-    if(bLyra2REv2){
-        lyra2re2_hash(BEGIN(nVersion), BEGIN(thash));
-    }
-    else{
-        scrypt_1024_1_1_256(BEGIN(nVersion), BEGIN(thash));
-    }
+    lyra2re2_hash(BEGIN(nVersion), BEGIN(thash));
     return thash;
 }
 
