@@ -87,8 +87,8 @@
 // Application startup time (used for uptime calculation)
 const int64_t nStartupTime = GetTime();
 
-const char * const BITCOIN_CONF_FILENAME = "monacoin.conf";
-const char * const BITCOIN_PID_FILENAME = "monacoin.pid";
+const char * const BITCOIN_CONF_FILENAME = "shitcoin.conf";
+const char * const BITCOIN_PID_FILENAME = "shitcoin.pid";
 
 ArgsManager gArgs;
 bool fPrintToConsole = false;
@@ -242,6 +242,7 @@ const CLogCategoryDesc LogCategories[] =
     {BCLog::QT, "qt"},
     {BCLog::LEVELDB, "leveldb"},
     {BCLog::ALERT, "alert"},
+    {BCLog::NAMES, "names"},
     {BCLog::ALL, "1"},
     {BCLog::ALL, "all"},
 };
@@ -506,7 +507,7 @@ static std::string FormatException(const std::exception* pex, const char* pszThr
     char pszModule[MAX_PATH] = "";
     GetModuleFileNameA(nullptr, pszModule, sizeof(pszModule));
 #else
-    const char* pszModule = "monacoin";
+    const char* pszModule = "shitcoin";
 #endif
     if (pex)
         return strprintf(
@@ -531,7 +532,7 @@ fs::path GetDefaultDataDir()
     // Unix: ~/.bitcoin
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "Monacoin";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "Shitcoin";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -541,10 +542,10 @@ fs::path GetDefaultDataDir()
         pathRet = fs::path(pszHome);
 #ifdef MAC_OSX
     // Mac
-    return pathRet / "Library/Application Support/Monacoin";
+    return pathRet / "Library/Application Support/Shitcoin";
 #else
     // Unix
-    return pathRet / ".monacoin";
+    return pathRet / ".shitcoin";
 #endif
 #endif
 }
