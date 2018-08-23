@@ -40,9 +40,9 @@ protected:
      * Notifies listeners of a block being connected.
      * Provides a vector of transactions evicted from the mempool as a result.
      */
-    virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted) {}
+    virtual void BlockConnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindex, const std::vector<CTransactionRef> &txnConflicted, const std::vector<CTransactionRef> &vNameConflicts) {}
     /** Notifies listeners of a block being disconnected */
-    virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block) {}
+    virtual void BlockDisconnected(const std::shared_ptr<const CBlock> &block, const CBlockIndex *pindexDelete, const std::vector<CTransactionRef> &vNameConflicts) {}
     /** Notifies listeners of the new active block chain on-disk. */
     virtual void SetBestChain(const CBlockLocator &locator) {}
     /** Notifies listeners about an inventory item being seen on the network. */
@@ -84,8 +84,8 @@ public:
 
     void UpdatedBlockTip(const CBlockIndex *, const CBlockIndex *, bool fInitialDownload);
     void TransactionAddedToMempool(const CTransactionRef &);
-    void BlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex, const std::vector<CTransactionRef> &);
-    void BlockDisconnected(const std::shared_ptr<const CBlock> &);
+    void BlockConnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *pindex, const std::vector<CTransactionRef> &, const std::vector<CTransactionRef> &);
+    void BlockDisconnected(const std::shared_ptr<const CBlock> &, const CBlockIndex *, const std::vector<CTransactionRef> &);
     void SetBestChain(const CBlockLocator &);
     void Inventory(const uint256 &);
     void Broadcast(int64_t nBestBlockTime, CConnman* connman);
