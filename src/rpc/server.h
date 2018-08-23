@@ -8,6 +8,7 @@
 
 #include "amount.h"
 #include "rpc/protocol.h"
+#include "script/script.h"
 #include "uint256.h"
 
 #include <list>
@@ -19,6 +20,8 @@
 
 static const unsigned int DEFAULT_RPC_SERIALIZE_VERSION = 1;
 
+class CMutableTransaction;
+class COutPoint;
 class CRPCCommand;
 
 namespace RPCServer
@@ -27,6 +30,8 @@ namespace RPCServer
     void OnStopped(std::function<void ()> slot);
     void OnPreCommand(std::function<void (const CRPCCommand&)> slot);
 }
+
+class CNameData;
 
 /** Wrapper for UniValue::VType, which includes typeAny:
  * Used to denote don't care type. Only used by RPCTypeCheckObj */
@@ -187,6 +192,11 @@ extern std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKe
 extern CAmount AmountFromValue(const UniValue& value);
 extern std::string HelpExampleCli(const std::string& methodname, const std::string& args);
 extern std::string HelpExampleRpc(const std::string& methodname, const std::string& args);
+
+extern void AddRawTxNameOperation(CMutableTransaction& tx, const UniValue& obj);
+extern UniValue getNameInfo(const valtype& name, const valtype& value, const COutPoint& outp, const CScript& addr, int height);
+extern UniValue getNameInfo(const valtype& name, const CNameData& data);
+extern std::string getNameInfoHelp(const std::string& indent, const std::string& trailing);
 
 bool StartRPC();
 void InterruptRPC();
