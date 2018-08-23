@@ -18,8 +18,10 @@
 #include "indirectmap.h"
 #include "policy/feerate.h"
 #include "primitives/transaction.h"
-#include "sync.h"
+#include "names/main.h"
 #include "random.h"
+#include "sync.h"
+#include "script/names.h"
 
 #include "boost/multi_index_container.hpp"
 #include "boost/multi_index/ordered_index.hpp"
@@ -89,6 +91,9 @@ private:
     CAmount nModFeesWithAncestors;
     int64_t nSigOpCostWithAncestors;
 
+    /* Cache name operation (if any) performed by this tx.  */
+    CNameScript nameOp;
+
 public:
     CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFee,
                     int64_t _nTime, unsigned int _entryHeight,
@@ -129,6 +134,32 @@ public:
     uint64_t GetSizeWithAncestors() const { return nSizeWithAncestors; }
     CAmount GetModFeesWithAncestors() const { return nModFeesWithAncestors; }
     int64_t GetSigOpCostWithAncestors() const { return nSigOpCostWithAncestors; }
+
+    inline bool
+    isNameNew() const
+    {
+        return nameOp.isNameOp() && nameOp.getNameOp() == OP_NAME_NEW;
+    }
+    inline bool
+    isNameRegistration() const
+    {
+        return nameOp.isNameOp() && nameOp.getNameOp() == OP_NAME_FIRSTUPDATE;
+    }
+    inline bool
+    isNameUpdate() const
+    {
+        return nameOp.isNameOp() && nameOp.getNameOp() == OP_NAME_UPDATE;
+    }
+    inline const valtype&
+    getNameNewHash() const
+    {
+        return nameOp.getOpHash();
+    }
+    inline const valtype&
+    getName() const
+    {
+        return nameOp.getOpName();
+    }
 
     mutable size_t vTxHashesIdx; //!< Index in mempool's vTxHashes
 };
@@ -323,6 +354,7 @@ enum class MemPoolRemovalReason {
     REORG,       //! Removed for reorganization
     BLOCK,       //! Removed for block
     CONFLICT,    //! Removed for conflict with in-block transaction
+    NAME_CONFLICT, //! Removed due to a name-operation conflict
     REPLACED     //! Removed for replacement
 };
 
@@ -426,6 +458,10 @@ private:
     mutable bool blockSinceLastRollingFeeBump;
     mutable double rollingMinimumFeeRate; //!< minimum fee to get into the pool, decreases exponentially
 
+
+    /** Name-related mempool data.  */
+    CNameMemPool names;
+
     void trackPackageRemoved(const CFeeRate& rate);
 
 public:
@@ -510,6 +546,7 @@ public:
      * check does nothing.
      */
     void check(const CCoinsViewCache *pcoins) const;
+    void checkNames(const CCoinsViewCache *pcoins) const;
     void setSanityCheck(double dFrequency = 1.0) { nCheckFrequency = dFrequency * 4294967295.0; }
 
     // addUnchecked must updated state for all ancestors of a given transaction,
@@ -536,6 +573,20 @@ public:
      * the tx is not dependent on other mempool transactions to be included in a block.
      */
     bool HasNoInputsOf(const CTransaction& tx) const;
+
+    /* Remove entries that conflict with name expirations / unexpirations.  */
+    inline void
+    removeUnexpireConflicts (const std::set<valtype>& unexpired)
+    {
+        LOCK(cs);
+        names.removeUnexpireConflicts (unexpired);
+    }
+    inline void
+    removeExpireConflicts (const std::set<valtype>& expired)
+    {
+        LOCK(cs);
+        names.removeExpireConflicts (expired);
+    }
 
     /** Affect CreateNewBlock prioritisation of transactions */
     void PrioritiseTransaction(const uint256& hash, const CAmount& nFeeDelta);
@@ -616,6 +667,38 @@ public:
     {
         LOCK(cs);
         return (mapTx.count(hash) != 0);
+    }
+
+    inline bool
+    registersName(const valtype& name) const
+    {
+        AssertLockHeld(cs);
+        return names.registersName(name);
+    }
+    inline bool
+    updatesName(const valtype& name) const
+    {
+        AssertLockHeld(cs);
+        return names.updatesName(name);
+    }
+    inline uint256
+    getTxForName (const valtype& name) const
+    {
+        AssertLockHeld(cs);
+        return names.getTxForName(name);
+    }
+     /**
+      * Check if a tx can be added to it according to name criteria.
+      * (The non-name criteria are checked in main.cpp and not here, we
+      * leave it there for as little changes as possible.)
+      * @param tx The tx that should be added.
+      * @return True if it doesn't conflict.
+      */
+    inline bool
+    checkNameOps (const CTransaction& tx) const
+    {
+        AssertLockHeld(cs);
+        return names.checkTx (tx);
     }
 
     CTransactionRef get(const uint256& hash) const;
