@@ -13,8 +13,6 @@
 #include "script/script.h"
 #include "uint256.h"
 
-typedef std::vector<unsigned char> valtype;
-
 namespace {
 
 inline bool set_success(ScriptError* ret)
@@ -1452,7 +1450,7 @@ bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, const C
     }
 
     // Additional validation for spend-to-script-hash transactions:
-    if ((flags & SCRIPT_VERIFY_P2SH) && scriptPubKey.IsPayToScriptHash())
+    if ((flags & SCRIPT_VERIFY_P2SH) && scriptPubKey.IsPayToScriptHash(true))
     {
         // scriptSig must be literals-only or validation fails
         if (!scriptSig.IsPushOnly())
@@ -1554,7 +1552,7 @@ size_t CountWitnessSigOps(const CScript& scriptSig, const CScript& scriptPubKey,
         return WitnessSigOps(witnessversion, witnessprogram, witness ? *witness : witnessEmpty, flags);
     }
 
-    if (scriptPubKey.IsPayToScriptHash() && scriptSig.IsPushOnly()) {
+    if (scriptPubKey.IsPayToScriptHash(true) && scriptSig.IsPushOnly()) {
         CScript::const_iterator pc = scriptSig.begin();
         std::vector<unsigned char> data;
         while (pc < scriptSig.end()) {
