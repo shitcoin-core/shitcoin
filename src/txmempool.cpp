@@ -12,6 +12,7 @@
 #include "policy/policy.h"
 #include "policy/fees.h"
 #include "reverse_iterator.h"
+#include "script/interpreter.h"
 #include "streams.h"
 #include "timedata.h"
 #include "util.h"
@@ -22,7 +23,8 @@ CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFe
                                  int64_t _nTime, unsigned int _entryHeight,
                                  bool _spendsCoinbase, int64_t _sigOpsCost, LockPoints lp):
     tx(_tx), nFee(_nFee), nTime(_nTime), entryHeight(_entryHeight),
-    spendsCoinbase(_spendsCoinbase), sigOpCost(_sigOpsCost), lockPoints(lp)
+    spendsCoinbase(_spendsCoinbase), sigOpCost(_sigOpsCost), lockPoints(lp),
+    nameOp()
 {
     nTxWeight = GetTransactionWeight(*tx);
     nUsageSize = RecursiveDynamicUsage(tx);
@@ -37,6 +39,20 @@ CTxMemPoolEntry::CTxMemPoolEntry(const CTransactionRef& _tx, const CAmount& _nFe
     nSizeWithAncestors = GetTxSize();
     nModFeesWithAncestors = nFee;
     nSigOpCostWithAncestors = sigOpCost;
+
+
+    if (_tx->IsNamecoin())
+    {
+        for (const auto& txOut : _tx->vout)
+        {
+            const CNameScript curNameOp(txOut.scriptPubKey);
+            if (!curNameOp.isNameOp())
+                continue;
+             assert(!nameOp.isNameOp());
+            nameOp = curNameOp;
+        }
+         assert(nameOp.isNameOp());
+    }
 }
 
 CTxMemPoolEntry::CTxMemPoolEntry(const CTxMemPoolEntry& other)
@@ -334,7 +350,8 @@ void CTxMemPoolEntry::UpdateAncestorState(int64_t modifySize, CAmount modifyFee,
 }
 
 CTxMemPool::CTxMemPool(CBlockPolicyEstimator* estimator) :
-    nTransactionsUpdated(0), minerPolicyEstimator(estimator)
+    nTransactionsUpdated(0), minerPolicyEstimator(estimator),
+    names(*this)
 {
     _clear(); //lock free clear
 
@@ -414,6 +431,7 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
     nTransactionsUpdated++;
     totalTxSize += entry.GetTxSize();
     if (minerPolicyEstimator) {minerPolicyEstimator->processTransaction(entry, validFeeEstimate);}
+    names.addUnchecked (hash, entry);
 
     vTxHashes.emplace_back(tx.GetWitnessHash(), newit);
     newit->vTxHashesIdx = vTxHashes.size() - 1;
@@ -423,6 +441,8 @@ bool CTxMemPool::addUnchecked(const uint256& hash, const CTxMemPoolEntry &entry,
 
 void CTxMemPool::removeUnchecked(txiter it, MemPoolRemovalReason reason)
 {
+    names.remove (*it);
+
     NotifyEntryRemoved(it->GetSharedTx(), reason);
     const uint256 hash = it->GetTx().GetHash();
     for (const CTxIn& txin : it->GetTx().vin)
@@ -559,6 +579,9 @@ void CTxMemPool::removeConflicts(const CTransaction &tx)
             }
         }
     }
+
+    /* Remove conflicting name registrations.  */
+    names.removeConflicts (tx);
 }
 
 /**
@@ -598,6 +621,7 @@ void CTxMemPool::_clear()
     mapLinks.clear();
     mapTx.clear();
     mapNextTx.clear();
+    names.clear();
     totalTxSize = 0;
     cachedInnerUsage = 0;
     lastRollingFeeUpdate = GetTime();
@@ -707,7 +731,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
         else {
             CValidationState state;
             bool fCheckResult = tx.IsCoinBase() ||
-                Consensus::CheckTxInputs(tx, state, mempoolDuplicate, nSpendHeight);
+                Consensus::CheckTxInputs(tx, state, mempoolDuplicate, nSpendHeight, SCRIPT_VERIFY_NAMES_MEMPOOL);
             assert(fCheckResult);
             UpdateCoins(tx, mempoolDuplicate, 1000000);
         }
@@ -723,7 +747,7 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
             assert(stepsSinceLastRemove < waitingOnDependants.size());
         } else {
             bool fCheckResult = entry->GetTx().IsCoinBase() ||
-                Consensus::CheckTxInputs(entry->GetTx(), state, mempoolDuplicate, nSpendHeight);
+                Consensus::CheckTxInputs(entry->GetTx(), state, mempoolDuplicate, nSpendHeight, SCRIPT_VERIFY_NAMES_MEMPOOL);
             assert(fCheckResult);
             UpdateCoins(entry->GetTx(), mempoolDuplicate, 1000000);
             stepsSinceLastRemove = 0;
@@ -739,6 +763,13 @@ void CTxMemPool::check(const CCoinsViewCache *pcoins) const
 
     assert(totalTxSize == checkTotal);
     assert(innerUsage == cachedInnerUsage);
+
+    checkNames(pcoins);
+}
+
+void CTxMemPool::checkNames(const CCoinsViewCache *pcoins) const
+{
+    names.check (*pcoins);
 }
 
 bool CTxMemPool::CompareDepthAndScore(const uint256& hasha, const uint256& hashb)
