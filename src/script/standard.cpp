@@ -7,11 +7,10 @@
 
 #include "pubkey.h"
 #include "script/script.h"
+#include "script/names.h"
 #include "util.h"
 #include "utilstrencodings.h"
 
-
-typedef std::vector<unsigned char> valtype;
 
 bool fAcceptDatacarrier = DEFAULT_ACCEPT_DATACARRIER;
 unsigned nMaxDatacarrierBytes = MAX_OP_RETURN_RELAY;
@@ -55,12 +54,16 @@ bool Solver(const CScript& scriptPubKey, txnouttype& typeRet, std::vector<std::v
 
     vSolutionsRet.clear();
 
+    // If we have a name script, strip the prefix
+    const CNameScript nameOp(scriptPubKey);
+    const CScript& script1 = nameOp.getAddress();
+
     // Shortcut for pay-to-script-hash, which are more constrained than the other types:
     // it is always OP_HASH160 20 [20 byte hash] OP_EQUAL
-    if (scriptPubKey.IsPayToScriptHash())
+    if (script1.IsPayToScriptHash(false))
     {
         typeRet = TX_SCRIPTHASH;
-        std::vector<unsigned char> hashBytes(scriptPubKey.begin()+2, scriptPubKey.begin()+22);
+        std::vector<unsigned char> hashBytes(script1.begin()+2, script1.begin()+22);
         vSolutionsRet.push_back(hashBytes);
         return true;
     }
