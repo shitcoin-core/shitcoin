@@ -130,6 +130,17 @@ protected:
     CCheckpointData checkpointData;
     ChainTxData chainTxData;
 
+    /* Map (block height, txid) pairs for buggy transactions onto their
+       bug type value.  */
+    std::map<std::pair<unsigned, uint256>, BugType> mapHistoricBugs;
+
+    /* Utility routine to insert into historic bug map.  */
+    inline void addBug(unsigned nHeight, const char* txid, BugType type)
+    {
+        std::pair<unsigned, uint256> key(nHeight, uint256S(txid));
+        mapHistoricBugs.insert(std::make_pair(key, type));
+    }
+
     int nSwitchKGWblock;
     int nSwitchDIGIblock;
     int nSwitchLyra2REv2_DGW;
