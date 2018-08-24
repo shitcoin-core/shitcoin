@@ -143,8 +143,8 @@ unsigned int static GetNextWorkRequired_V2(const CBlockIndex* pindexLast, const 
 	uint64_t				PastBlocksMin				= PastSecondsMin / BlocksTargetSpacing;
 	uint64_t				PastBlocksMax				= PastSecondsMax / BlocksTargetSpacing;	
 
-    if (params.fPowNoRetargeting)
-        return pindexLast->nBits;
+  if (params.fPowNoRetargeting)
+      return pindexLast->nBits;
 
 	return KimotoGravityWell(pindexLast, pblock, BlocksTargetSpacing, PastBlocksMin, PastBlocksMax, params);
 }
@@ -207,10 +207,11 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     }
     /* Adapt the retargeting interval after merge-mining start
        according to the changed Namecoin rules.  */
-    int nBlocksBack = params.DifficultyAdjustmentInterval() - 1;
+		/* Monacoin will not affect.*/
+    /*int nBlocksBack = params.DifficultyAdjustmentInterval() - 1;
     if (pindexLast->nHeight >= params.nAuxpowStartHeight
         && (pindexLast->nHeight + 1 > params.DifficultyAdjustmentInterval()))
-        nBlocksBack = params.DifficultyAdjustmentInterval();
+        nBlocksBack = params.DifficultyAdjustmentInterval();*/
 
     // Go back by what we want to be 14 days worth of blocks
     // Monacoin: This fixes an issue where a 51% attack can change difficulty at will.
