@@ -1241,7 +1241,7 @@ bool static ProcessHeadersMessage(CNode *pfrom, CConnman *connman, const std::ve
     }
 
     bool received_new_header = false;
-    const bool hasNewHeaders = (mapBlockIndex.count(headers.back().GetHash()) == 0);
+//    const bool hasNewHeaders = (mapBlockIndex.count(headers.back().GetHash()) == 0);
     const CBlockIndex *pindexLast = nullptr;
     {
         LOCK(cs_main);
@@ -1356,14 +1356,7 @@ bool static ProcessHeadersMessage(CNode *pfrom, CConnman *connman, const std::ve
             nodestate->m_last_block_announcement = GetTime();
         }
 
-        bool maxSize = (nCount == MAX_HEADERS_RESULTS);
-        if (pfrom->nVersion >= SIZE_HEADERS_LIMIT_VERSION
-              && nSize >= THRESHOLD_HEADERS_SIZE)
-            maxSize = true;
-        // FIXME: This change (with hasNewHeaders) is rolled back in Bitcoin,
-        // but I think it should stay here for merge-mined coins.  Try to get
-        // it fixed again upstream and then update the fix.
-        if (maxSize && hasNewHeaders) {
+        if (nCount == MAX_HEADERS_RESULTS) {
             // Headers message had its maximum size; the peer may have more headers.
             // TODO: optimize: if pindexLast is an ancestor of chainActive.Tip or pindexBestHeader, continue
             // from there instead.
@@ -2055,7 +2048,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
                   && nSize >= THRESHOLD_HEADERS_SIZE)
                 break;
         }
-        if (pfrom->nVersion >= SIZE_HEADERS_LIMIT_VERSION
+/*        if (pfrom->nVersion >= SIZE_HEADERS_LIMIT_VERSION
               && nSize > MAX_HEADERS_SIZE)
             LogPrintf("ERROR: not pushing 'headers', too large\n");
         else
@@ -2063,7 +2056,7 @@ bool static ProcessMessage(CNode* pfrom, const std::string& strCommand, CDataStr
             LogPrint(BCLog::NET, "pushing %u headers, %u bytes\n", nCount, nSize);
             nodestate->pindexBestHeaderSent = pindex ? pindex : chainActive.Tip();
             connman.PushMessage(pfrom, msgMaker.Make(NetMsgType::HEADERS, vHeaders));
-        }
+        }*/
     }
 
 
