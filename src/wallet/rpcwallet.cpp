@@ -382,15 +382,6 @@ static void SendMoney(CWallet * const pwallet, const CTxDestination &address, CA
     return SendMoneyToScript(pwallet, scriptPubKey, NULL, nValue, fSubtractFeeFromAmount, wtxNew, coin_control);
 }
 
-void SendMoneyToScript(CWallet* const pwallet, const CScript &scriptPubKey,
-                       const CTxIn* withInput, CAmount nValue,
-                       bool fSubtractFeeFromAmount, CWalletTx& wtxNew,
-                       const CCoinControl& coin_control)
-{
-    // Parse Bitcoin address
-    CScript scriptPubKey = GetScriptForDestination(address);
-     return SendMoneyToScript(pwallet, scriptPubKey, NULL, nValue, fSubtractFeeFromAmount, wtxNew, coin_control);
-}
  void SendMoneyToScript(CWallet* const pwallet, const CScript &scriptPubKey,
                        const CTxIn* withInput, CAmount nValue,
                        bool fSubtractFeeFromAmount, CWalletTx& wtxNew,
@@ -422,13 +413,9 @@ void SendMoneyToScript(CWallet* const pwallet, const CScript &scriptPubKey,
         throw JSONRPCError(RPC_CLIENT_P2P_DISABLED, "Error: Peer-to-peer functionality missing or disabled");
     }
 
-    // Parse Bitcoin address
-    CScript scriptPubKey = GetScriptForDestination(address);
-
     // Create and send the transaction
     CReserveKey reservekey(pwallet);
     CAmount nFeeRequired;
-    std::string strError;
     std::vector<CRecipient> vecSend;
     int nChangePosRet = -1;
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
