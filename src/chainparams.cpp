@@ -151,7 +151,7 @@ public:
         consensus.hashGenesisBlock = genesis.GetHash();
 				std::cout << "consensus.hashGenesisBlock = " << consensus.hashGenesisBlock.GetHex() << '\n';
 				std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
-        assert(consensus.hashGenesisBlock == uint256S("ef14c7bba981593ad52a63e9e80e2d89cfbd391ad6de09de7f90ea0e378010fb"));
+        assert(consensus.hashGenesisBlock == uint256S("bc64ba6fb19cdfb67c25d7155279c2f8c77d1ff700831189ade8b58605f48327"));
         assert(genesis.hashMerkleRoot == uint256S("06c509588d9b17f0a2d848e5533820f90a8a5fb1006ebdf5c7252cf9b1412986"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
