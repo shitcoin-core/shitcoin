@@ -7,10 +7,14 @@
 
 #include <hash.h>
 #include <utilstrencodings.h>
+#include "crypto/Lyra2RE/Lyra2RE.h"
 
 uint256 CPureBlockHeader::GetHash() const
 {
-    return SerializeHash(*this);
+    //return SerializeHash(*this);
+    uint256 thash;
+    lyra2re2_hash(BEGIN(nVersion), BEGIN(thash));
+    return thash;
 }
 
 void CPureBlockHeader::SetBaseVersion(int32_t nBaseVersion, int32_t nChainId)

@@ -25,13 +25,6 @@ void CBlockHeader::SetAuxpow (CAuxPow* apow)
     }
 }
 
-uint256 CBlockHeader::GetPoWHash(bool bLyra2REv2) const
-{
-    uint256 thash;
-    lyra2re2_hash(BEGIN(nVersion), BEGIN(thash));
-    return thash;
-}
-
 std::string CBlock::ToString() const
 {
     std::stringstream s;

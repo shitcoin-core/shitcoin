@@ -59,8 +59,6 @@ public:
 
     void SetAuxpow (CAuxPow* apow);
 
-    uint256 GetPoWHash(bool bLyra2REv2 = false) const;
-
 };
 
 
