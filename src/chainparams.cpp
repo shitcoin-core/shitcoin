@@ -49,6 +49,10 @@ static CBlock CreateGenesisBlock(const CScript& genesisInputScript, const CScrip
     genesis.hashPrevBlock.SetNull();
     genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
 
+    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    std::cout << hashTarget.ToString() << '\n';
+    while (UintToArith256(genesis.GetHash()) > hashTarget) ++genesis.nNonce;
+
     return genesis;
 }
 
@@ -100,7 +104,7 @@ public:
     CMainParams() {
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 1051200;
-        consensus.BIP34Height = 1000000;
+        consensus.BIP34Height = 1000000000;
         consensus.BIP34Hash = uint256S("100006c80c9a27ed62e200700b039b2cd2cad259b952653039d6770ad340d369");
         consensus.BIP65Height = 0;
         consensus.BIP66Height = 0;
@@ -156,6 +160,7 @@ public:
 				std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';*/
 				std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
 				std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
         assert(consensus.hashGenesisBlock == uint256S("0x000006c80c9a27ed62e200700b039b2cd2cad259b952653039d6770ad340d369"));
         assert(genesis.hashMerkleRoot == uint256S("0x06c509588d9b17f0a2d848e5533820f90a8a5fb1006ebdf5c7252cf9b1412986"));
 
@@ -198,11 +203,11 @@ public:
     CTestNetParams() {
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 1051200;
-        consensus.BIP34Height = 0;
+        consensus.BIP34Height = 1000000000;
         consensus.BIP34Hash = uint256S("0");
         consensus.BIP65Height = -1;
         consensus.BIP66Height = -1;
-        consensus.powLimit = uint256S("0");
+        consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1.1 * 24 * 60 * 60; // 1.1 days
         consensus.nPowTargetSpacing = 1.5 * 60; // 1.5 minutes
         consensus.nPowTargetTimespanDigisheld = 1.5 * 60;
@@ -224,10 +229,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nStartTime = 0; // March 1, 2017
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 0; // March 8, 2018
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00000000000000000000000000000000000000000000000000001b57ceb7b646");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0"); //160675
+        consensus.defaultAssumeValid = uint256S("0x00000213346ab9952e8396387f423c4d958c0554b2dc9c0748d1335c0c914683"); //160675
 
         pchMessageStart[0] = 0xfd;
         pchMessageStart[1] = 0xd2;
@@ -243,10 +248,13 @@ public:
         nPruneAfterHeight = 1000;
         vAlertPubKey = ParseHex("04887665070e79d20f722857e58ec8f402733f710135521a0b63441419bf5665ba4623bed13fca0cb2338682ab2a54ad13ce07fbc81c3c2f0912a4eb8521dd3cfb");
 
-        genesis = CreateTestnetGenesisBlock(1488924140, 2122860, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1488924140, 2152836, 0x1e0ffff0, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0xa2b106ceba3be0c6d097b2a6a6aacf9d638ba8258ae478158f449c321061e0b2"));
-        assert(genesis.hashMerkleRoot == uint256S("0x35e405a8a46f4dbc1941727aaf338939323c3b955232d0317f8731fe07ac4ba6"));
+				std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+				std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+        assert(consensus.hashGenesisBlock == uint256S("0x00000213346ab9952e8396387f423c4d958c0554b2dc9c0748d1335c0c914683"));
+        assert(genesis.hashMerkleRoot == uint256S("0x1acef0f0002ff547fdcb5ae94b8a280ee384f3c1f66e0f3256792a0ff35bbe7e"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -270,6 +278,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
+                {0, uint256S("0x00000213346ab9952e8396387f423c4d958c0554b2dc9c0748d1335c0c914683")},
             }
         };
 
@@ -312,10 +321,10 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000002");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        consensus.defaultAssumeValid = uint256S("0x0f57241b4037bd72ee149f7c2b12f79492927ba52d8e80987f683aced65a91cb");
 
         // Hardfork params
         nSwitchKGWblock = 20;
@@ -331,8 +340,11 @@ public:
 
         genesis = CreateTestnetGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        //assert(consensus.hashGenesisBlock == uint256S("0x7543a69d7c2fcdb29a5ebec2fc064c074a35253b6f3072c8a749473aa590a29c"));
-//        assert(genesis.hashMerkleRoot == uint256S("0x97ddfbbae6be97fd6cdf3e7ca13232a3afff2353e29badfab7f73011edd4ced9"));
+				std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+				std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+        assert(consensus.hashGenesisBlock == uint256S("0x0f57241b4037bd72ee149f7c2b12f79492927ba52d8e80987f683aced65a91cb"));
+        assert(genesis.hashMerkleRoot == uint256S("0x1acef0f0002ff547fdcb5ae94b8a280ee384f3c1f66e0f3256792a0ff35bbe7e"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -343,6 +355,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
+                {0, uint256S("0x0f57241b4037bd72ee149f7c2b12f79492927ba52d8e80987f683aced65a91cb")},
             }
         };
 
