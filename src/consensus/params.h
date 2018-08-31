@@ -40,16 +40,8 @@ public:
 
     unsigned NameExpirationDepth(unsigned nHeight) const
     {
-        /* Important:  It is assumed (in ExpireNames) that
-           "n - expirationDepth(n)" is increasing!  (This is
-           the update height up to which names expire at height n.)  */
 
-        if (nHeight < 24000)
-            return 12000;
-        if (nHeight < 48000)
-            return nHeight - 12000;
-
-        return 36000;
+        return 350399; // 365 day for Monacoin algo
     }
 
     CAmount MinNameCoinAmount(unsigned nHeight) const
