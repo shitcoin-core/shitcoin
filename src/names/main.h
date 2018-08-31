@@ -31,7 +31,7 @@ static const unsigned MIN_FIRSTUPDATE_DEPTH = 80;
 static const unsigned MAX_VALUE_LENGTH_UI = 520;
 
 /** The amount of coins to lock in created transactions.  */
-static const CAmount NAME_LOCKED_AMOUNT = COIN / 100;
+static const CAmount NAME_LOCKED_AMOUNT = COIN;
 
 /* ************************************************************************** */
 /* CNameTxUndo.  */
