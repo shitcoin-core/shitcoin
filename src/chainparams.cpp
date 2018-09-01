@@ -49,9 +49,9 @@ static CBlock CreateGenesisBlock(const CScript& genesisInputScript, const CScrip
     genesis.hashPrevBlock.SetNull();
     genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
 
-    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-    std::cout << hashTarget.ToString() << '\n';
-    while (UintToArith256(genesis.GetHash()) > hashTarget) ++genesis.nNonce;
+    //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    //std::cout << hashTarget.ToString() << '\n';
+    //while (UintToArith256(genesis.GetHash()) > hashTarget) ++genesis.nNonce;
 
     return genesis;
 }
@@ -134,7 +134,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000a1290f4016a781896b1467d92e510cd15d7339eb2494cdcb45462a41831");
+        consensus.defaultAssumeValid = uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8");
         consensus.nAuxpowChainId = 0x0001;
         consensus.nAuxpowStartHeight = 10;
         consensus.fStrictChainId = true;
@@ -153,10 +153,16 @@ public:
         nDefaultPort = 9403;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1535731390, 2826340, 0x1e0ffff0, 1, 50 * COIN);
-        consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000a1290f4016a781896b1467d92e510cd15d7339eb2494cdcb45462a41831"));
-        assert(genesis.hashMerkleRoot == uint256S("0xe0c6e25b19d787e0307a3ebebee1b5e6c7346367b4b50b93e4745b4a160b5250"));
+        genesis = CreateGenesisBlock(1535731390, 5477690, 0x1e0ffff0, 1, 50 * COIN);
+	//std::cout << "genesis.nTime = " << genesis.nTime << '\n';
+	//std::cout << "genesis.nBits = " << genesis.nBits << '\n';
+	//std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+	//std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+	//std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+      
+	consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8"));
+        assert(genesis.hashMerkleRoot == uint256S("0x163551b00496e5caa5b92ea849461c1a86fc80f0c9df70bb5c1c316c8a93b048"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("dnsseed.monacoin.org", false);
@@ -178,7 +184,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x00000a1290f4016a781896b1467d92e510cd15d7339eb2494cdcb45462a41831")},
+                {0, uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8")},
             }
         };
 
