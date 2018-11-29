@@ -14,8 +14,8 @@
 <context>
     <name>BitcoinGUI</name>
     <message>
-        <source>Monacoin</source>
-        <translation>Monacoin</translation>
+        <source>Shitcoin</source>
+        <translation>Shitcoin</translation>
     </message>
     </context>
 <context>
@@ -156,8 +156,8 @@
 <context>
     <name>bitcoin-core</name>
     <message>
-        <source>Monacoin Core</source>
-        <translation>Monacoin Jezrga</translation>
+        <source>Shitcoin Core</source>
+        <translation>Shitcoin Jezrga</translation>
     </message>
     </context>
 </TS>

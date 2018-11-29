@@ -70,7 +70,7 @@
         <translation>Құпия сөзді өзгерту</translation>
     </message>
     <message>
-        <source>Monacoin</source>
+        <source>Shitcoin</source>
         <translation>Биткоин</translation>
     </message>
     <message>

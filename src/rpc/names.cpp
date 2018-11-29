@@ -320,7 +320,7 @@ name_filter (const JSONRPCRequest& request)
         "\nScan and list names matching a regular expression.\n"
         "\nArguments:\n"
         "1. \"regexp\"      (string, optional) filter names with this regexp\n"
-        "2. \"maxage\"      (numeric, optional, default=36000) only consider names updated in the last \"maxage\" blocks; 0 means all names\n"
+        "2. \"maxage\"      (numeric, optional, default=350399) only consider names updated in the last \"maxage\" blocks; 0 means all names\n"
         "3. \"from\"        (numeric, optional, default=0) return from this position onward; index starts at 0\n"
         "4. \"nb\"          (numeric, optional, default=0) return only \"nb\" entries; 0 means all\n"
         "5. \"stat\"        (string, optional) if set to the string \"stat\", print statistics instead of returning the names\n"
@@ -332,7 +332,7 @@ name_filter (const JSONRPCRequest& request)
         "\nExamples:\n"
         + HelpExampleCli ("name_filter", "\"\" 5")
         + HelpExampleCli ("name_filter", "\"^id/\"")
-        + HelpExampleCli ("name_filter", "\"^id/\" 36000 0 0 \"stat\"")
+        + HelpExampleCli ("name_filter", "\"^id/\" 350399 0 0 \"stat\"")
         + HelpExampleRpc ("name_scan", "\"^d/\"")
       );
 

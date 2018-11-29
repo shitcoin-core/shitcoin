@@ -230,8 +230,8 @@
         <translation>&amp;Проверить сообщение...</translation>
     </message>
     <message>
-        <source>Monacoin</source>
-        <translation>Monacoin Core</translation>
+        <source>Shitcoin</source>
+        <translation>Shitcoin Core</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -442,8 +442,8 @@
         <translation>Пробросить порт через &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Monacoin network through a SOCKS5 proxy.</source>
-        <translation>Подключится к сети Monacoin через SOCKS5 прокси.</translation>
+        <source>Connect to the Shitcoin network through a SOCKS5 proxy.</source>
+        <translation>Подключится к сети Shitcoin через SOCKS5 прокси.</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
@@ -522,7 +522,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>Enter a Monacoin address (e.g. %1)</source>
+        <source>Enter a Shitcoin address (e.g. %1)</source>
         <translation>Введите биткоин-адрес (напр. %1)</translation>
     </message>
     <message numerus="yes">
@@ -832,8 +832,8 @@
 <context>
     <name>bitcoin-core</name>
     <message>
-        <source>Monacoin Core</source>
-        <translation>Monacoin Core</translation>
+        <source>Shitcoin Core</source>
+        <translation>Shitcoin Core</translation>
     </message>
     <message>
         <source>Whitelisted peers cannot be DoS banned and their transactions are always relayed, even if they are already in the mempool, useful e.g. for a gateway</source>

@@ -114,8 +114,8 @@
         <translation>Reindexando bloques en el disco...</translation>
     </message>
     <message>
-        <source>Send coins to a Monacoin address</source>
-        <translation>Enviar monedas a una dirección Monacoin</translation>
+        <source>Send coins to a Shitcoin address</source>
+        <translation>Enviar monedas a una dirección Shitcoin</translation>
     </message>
     <message>
         <source>Backup wallet to another location</source>
@@ -130,8 +130,8 @@
         <translation>Abre la consola de depuración y diágnostico</translation>
     </message>
     <message>
-        <source>Monacoin</source>
-        <translation>Monacoin</translation>
+        <source>Shitcoin</source>
+        <translation>Shitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -158,12 +158,12 @@
         <translation>Encriptar las llaves privadas que pertenecen a tu billetera</translation>
     </message>
     <message>
-        <source>Sign messages with your Monacoin addresses to prove you own them</source>
-        <translation>Firma mensajes con tus direcciones Monacoin para probar que eres dueño de ellas</translation>
+        <source>Sign messages with your Shitcoin addresses to prove you own them</source>
+        <translation>Firma mensajes con tus direcciones Shitcoin para probar que eres dueño de ellas</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Monacoin addresses</source>
-        <translation>Verificar mensajes para asegurar que estaban firmados con direcciones Monacoin especificas</translation>
+        <source>Verify messages to ensure they were signed with specified Shitcoin addresses</source>
+        <translation>Verificar mensajes para asegurar que estaban firmados con direcciones Shitcoin especificas</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -608,8 +608,8 @@
         <translation>Correr en segundo plano como daemon y aceptar comandos</translation>
     </message>
     <message>
-        <source>Monacoin Core</source>
-        <translation>Monacoin Core</translation>
+        <source>Shitcoin Core</source>
+        <translation>Shitcoin Core</translation>
     </message>
     <message>
         <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>

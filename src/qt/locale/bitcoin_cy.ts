@@ -154,8 +154,8 @@
         <translation>Newid y cyfrinymadrodd a ddefnyddiwyd ar gyfer amgryptio'r waled</translation>
     </message>
     <message>
-        <source>Monacoin</source>
-        <translation>Monacoin</translation>
+        <source>Shitcoin</source>
+        <translation>Shitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -640,8 +640,8 @@
         <translation>Opsiynau:</translation>
     </message>
     <message>
-        <source>Monacoin Core</source>
-        <translation>Craidd Monacoin</translation>
+        <source>Shitcoin Core</source>
+        <translation>Craidd Shitcoin</translation>
     </message>
     <message>
         <source>Information</source>

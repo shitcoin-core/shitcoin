@@ -5,25 +5,81 @@
 // Distributed under the MIT/X11 software license, see the accompanying
 // file license.txt or http://www.opensource.org/licenses/mit-license.php.
 
-#include <auxpow.h>
+#include "auxpow.h"
 
-#include <compat/endian.h>
-#include <consensus/consensus.h>
-#include <consensus/merkle.h>
-#include <hash.h>
-#include <primitives/block.h>
-#include <script/script.h>
-#include <util.h>
-#include <utilstrencodings.h>
+#include "compat/endian.h"
+#include "consensus/consensus.h"
+#include "consensus/merkle.h"
+#include "consensus/validation.h"
+#include "hash.h"
+#include "script/script.h"
+#include "txmempool.h"
+#include "util.h"
+#include "utilstrencodings.h"
+#include "validation.h"
 
 #include <algorithm>
-#include <cassert>
+
+/* Moved from wallet.cpp.  CMerkleTx is necessary for auxpow, independent
+   of an enabled (or disabled) wallet.  Always include the code.  */
+
+const uint256 CMerkleTx::ABANDON_HASH(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));
+
+void CMerkleTx::SetMerkleBranch(const CBlockIndex* pindex, int posInBlock)
+{
+    // Update the tx's hashBlock
+    hashBlock = pindex->GetBlockHash();
+
+    // set the position of the transaction in the block
+    nIndex = posInBlock;
+}
+
+void CMerkleTx::InitMerkleBranch(const CBlock& block, int posInBlock)
+{
+    hashBlock = block.GetHash();
+    nIndex = posInBlock;
+    vMerkleBranch = BlockMerkleBranch (block, nIndex);
+}
+
+int CMerkleTx::GetDepthInMainChain(const CBlockIndex* &pindexRet) const
+{
+    if (hashUnset())
+        return 0;
+
+    AssertLockHeld(cs_main);
+
+    // Find the block it claims to be in
+    BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
+    if (mi == mapBlockIndex.end())
+        return 0;
+    CBlockIndex* pindex = (*mi).second;
+    if (!pindex || !chainActive.Contains(pindex))
+        return 0;
+
+    pindexRet = pindex;
+    return ((nIndex == -1) ? (-1) : 1) * (chainActive.Height() - pindex->nHeight + 1);
+}
+
+int CMerkleTx::GetBlocksToMaturity() const
+{
+    if (!IsCoinBase())
+        return 0;
+    return std::max(0, (COINBASE_MATURITY+1) - GetDepthInMainChain());
+}
+
+
+bool CMerkleTx::AcceptToMemoryPool(const CAmount& nAbsurdFee, CValidationState& state)
+{
+    return ::AcceptToMemoryPool(mempool, state, tx, true, nullptr, nullptr, false, nAbsurdFee);
+}
+
+/* ************************************************************************** */
 
 bool
 CAuxPow::check (const uint256& hashAuxBlock, int nChainId,
                 const Consensus::Params& params) const
 {
-    if (coinbaseTx.nIndex != 0)
+    if (nIndex != 0)
         return error("AuxPow is not a generate");
 
     if (params.fStrictChainId && parentBlock.GetChainId () == nChainId)
@@ -39,12 +95,11 @@ CAuxPow::check (const uint256& hashAuxBlock, int nChainId,
     std::reverse (vchRootHash.begin (), vchRootHash.end ()); // correct endian
 
     // Check that we are in the parent block merkle tree
-    if (CheckMerkleBranch(coinbaseTx.GetHash(), coinbaseTx.vMerkleBranch,
-                          coinbaseTx.nIndex)
+    if (CheckMerkleBranch(GetHash(), vMerkleBranch, nIndex)
           != parentBlock.hashMerkleRoot)
         return error("Aux POW merkle root incorrect");
 
-    const CScript script = coinbaseTx.tx->vin[0].scriptSig;
+    const CScript script = tx->vin[0].scriptSig;
 
     // Check that the same work is not submitted twice to our chain.
     //
@@ -122,7 +177,7 @@ CAuxPow::getExpectedIndex (uint32_t nNonce, int nChainId, unsigned h)
   rand += nChainId;
   rand = rand * 1103515245 + 12345;
 
-  return rand % (1u << h);
+  return rand % (1 << h);
 }
 
 uint256
@@ -144,10 +199,11 @@ CAuxPow::CheckMerkleBranch (uint256 hash,
   return hash;
 }
 
-std::unique_ptr<CAuxPow>
-CAuxPow::createAuxPow (const CPureBlockHeader& header)
+void
+CAuxPow::initAuxPow (CBlockHeader& header)
 {
-  assert (header.IsAuxpow ());
+  /* Set auxpow flag right now, since we take the block hash below.  */
+  header.SetAuxpowVersion(true);
 
   /* Build a minimal coinbase script input for merge-mining.  */
   const uint256 blockHash = header.GetHash ();
@@ -173,26 +229,10 @@ CAuxPow::createAuxPow (const CPureBlockHeader& header)
   parent.hashMerkleRoot = BlockMerkleRoot (parent);
 
   /* Construct the auxpow object.  */
-  std::unique_ptr<CAuxPow> auxpow(new CAuxPow (coinbaseRef));
-  assert (auxpow->vChainMerkleBranch.empty ());
-  auxpow->nChainIndex = 0;
-  assert (auxpow->coinbaseTx.vMerkleBranch.empty ());
-  auxpow->coinbaseTx.nIndex = 0;
-  auxpow->parentBlock = parent;
-
-  return auxpow;
-}
-
-CPureBlockHeader&
-CAuxPow::initAuxPow (CBlockHeader& header)
-{
-  /* Set auxpow flag right now, since we take the block hash below when creating
-     the minimal auxpow for header.  */
-  header.SetAuxpowVersion(true);
-
-  std::unique_ptr<CAuxPow> apow = createAuxPow (header);
-  CPureBlockHeader& result = apow->parentBlock;
-  header.SetAuxpow (std::move (apow));
-
-  return result;
+  header.SetAuxpow (new CAuxPow (coinbaseRef));
+  assert (header.auxpow->vChainMerkleBranch.empty ());
+  header.auxpow->nChainIndex = 0;
+  assert (header.auxpow->vMerkleBranch.empty ());
+  header.auxpow->nIndex = 0;
+  header.auxpow->parentBlock = parent;
 }

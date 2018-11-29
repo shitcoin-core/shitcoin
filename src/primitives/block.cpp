@@ -12,16 +12,17 @@
 #include "crypto/scrypt.h"
 #include "chainparams.h"
 
-uint256 CBlockHeader::GetHash() const
+void CBlockHeader::SetAuxpow (CAuxPow* apow)
 {
-    return SerializeHash(*this);
-}
-
-uint256 CBlockHeader::GetPoWHash(bool bLyra2REv2) const
-{
-    uint256 thash;
-    lyra2re2_hash(BEGIN(nVersion), BEGIN(thash));
-    return thash;
+    if (apow)
+    {
+        auxpow.reset(apow);
+        SetAuxpowVersion(true);
+    } else
+    {
+        auxpow.reset();
+        SetAuxpowVersion(false);
+    }
 }
 
 std::string CBlock::ToString() const

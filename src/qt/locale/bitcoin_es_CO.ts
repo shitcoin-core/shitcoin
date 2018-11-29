@@ -126,8 +126,8 @@
         <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
-        <source>Send coins to a Monacoin address</source>
-        <translation>Enviando monedas a una dirección de Monacoin</translation>
+        <source>Send coins to a Shitcoin address</source>
+        <translation>Enviando monedas a una dirección de Shitcoin</translation>
     </message>
     <message>
         <source>Change the passphrase used for wallet encryption</source>
@@ -146,8 +146,8 @@
         <translation>&amp;Verificar Mensaje...</translation>
     </message>
     <message>
-        <source>Monacoin</source>
-        <translation>Monacoin</translation>
+        <source>Shitcoin</source>
+        <translation>Shitcoin</translation>
     </message>
     <message>
         <source>Wallet</source>
@@ -296,8 +296,8 @@
 <context>
     <name>bitcoin-core</name>
     <message>
-        <source>Monacoin Core</source>
-        <translation>Monacoin Core</translation>
+        <source>Shitcoin Core</source>
+        <translation>Shitcoin Core</translation>
     </message>
     <message>
         <source>Insufficient funds</source>
