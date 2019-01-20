@@ -134,7 +134,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8");
+        consensus.defaultAssumeValid = uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55");
         consensus.nAuxpowChainId = 0x0001;
         consensus.nAuxpowStartHeight = 10;
         consensus.fStrictChainId = true;
@@ -153,15 +153,16 @@ public:
         nDefaultPort = 9403;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1535731390, 5477690, 0x1e0ffff0, 1, 50 * COIN);
-	//std::cout << "genesis.nTime = " << genesis.nTime << '\n';
-	//std::cout << "genesis.nBits = " << genesis.nBits << '\n';
-	//std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
-	//std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
-	//std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        genesis = CreateGenesisBlock(1547910000, 6047180, 0x1e0ffff0, 1, 50 * COIN);
+	
+        //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
+	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
+	      //std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+	      //std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
       
-	consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8"));
+	      consensus.hashGenesisBlock = genesis.GetHash();
+        assert(consensus.hashGenesisBlock == uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55"));
         assert(genesis.hashMerkleRoot == uint256S("0x163551b00496e5caa5b92ea849461c1a86fc80f0c9df70bb5c1c316c8a93b048"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
@@ -184,7 +185,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x0000069d23ec365f296829d788eead6e5872eb3103595c68686003a1b0e16ec8")},
+                {0, uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55")},
             }
         };
 
@@ -232,7 +233,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00000371b40be9627d1671ef192852312da76a19c204b574a89cb942189cb5bd"); //160675
+        consensus.defaultAssumeValid = uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f"); //160675
 
         pchMessageStart[0] = 0xfd;
         pchMessageStart[1] = 0xd2;
@@ -248,9 +249,16 @@ public:
         nPruneAfterHeight = 1000;
         vAlertPubKey = ParseHex("04887665070e79d20f722857e58ec8f402733f710135521a0b63441419bf5665ba4623bed13fca0cb2338682ab2a54ad13ce07fbc81c3c2f0912a4eb8521dd3cfb");
 
-        genesis = CreateTestnetGenesisBlock(1535731390, 4276709, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1547910000, 4340998, 0x1e0ffff0, 1, 50 * COIN);
+        
+        //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
+	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
+	      //std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+	      //std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x00000371b40be9627d1671ef192852312da76a19c204b574a89cb942189cb5bd"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f"));
         assert(genesis.hashMerkleRoot == uint256S("0x0923c8ab83e99c392c7bc27a064d34bef5a6478b65034e0346a1982dc5d67604"));
 
         vFixedSeeds.clear();
@@ -275,7 +283,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x00000371b40be9627d1671ef192852312da76a19c204b574a89cb942189cb5bd")},
+                {0, uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f")},
             }
         };
 
@@ -332,12 +340,19 @@ public:
         pchMessageStart[1] = 0xbf;
         pchMessageStart[2] = 0xb5;
         pchMessageStart[3] = 0xda;
-        nDefaultPort = 20444;
+        nDefaultPort = 19403;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateTestnetGenesisBlock(1535731390, 4, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1547910000, 4, 0x207fffff, 1, 50 * COIN);
+        
+        //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
+	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
+	      //std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+	      //std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x786be69ce270ea269691bad633f815eee0c566728e273d6ae8b1e70727b649fb"));
+        assert(consensus.hashGenesisBlock == uint256S("0x72fc4fc9f8fb4f61cfad17bfa58118af161f6b426e2c533fc1c5cd9a5cb52c42"));
         assert(genesis.hashMerkleRoot == uint256S("0x0923c8ab83e99c392c7bc27a064d34bef5a6478b65034e0346a1982dc5d67604"));
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
@@ -349,7 +364,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x786be69ce270ea269691bad633f815eee0c566728e273d6ae8b1e70727b649fb")},
+                {0, uint256S("0x72fc4fc9f8fb4f61cfad17bfa58118af161f6b426e2c533fc1c5cd9a5cb52c42")},
             }
         };
 
