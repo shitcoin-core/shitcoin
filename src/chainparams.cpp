@@ -49,9 +49,11 @@ static CBlock CreateGenesisBlock(const CScript& genesisInputScript, const CScrip
     genesis.hashPrevBlock.SetNull();
     genesis.hashMerkleRoot = BlockMerkleRoot(genesis);
 
-    //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
-    //std::cout << hashTarget.ToString() << '\n';
-    //while (UintToArith256(genesis.GetHash()) > hashTarget) ++genesis.nNonce;
+    /*
+    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    std::cout << hashTarget.ToString() << '\n';
+    while (UintToArith256(genesis.GetHash()) > hashTarget) ++genesis.nNonce;
+    */
 
     return genesis;
 }
@@ -69,7 +71,7 @@ static CBlock CreateGenesisBlock(const CScript& genesisInputScript, const CScrip
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "Argentina’s Peso Tumbles as Turbulence in Emerging Markets Spreads.";
+    const char* pszTimestamp = "JPMorgan Chase Moves to Be First Big U.S. Bank With Its Own Cryptocurrency.";
 		const CScript genesisInputScript = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
     const CScript genesisOutputScript = CScript() << ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
     return CreateGenesisBlock(genesisInputScript, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
@@ -134,7 +136,7 @@ public:
         consensus.nMinimumChainWork = uint256S("0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55");
+        consensus.defaultAssumeValid = uint256S("0x00000411ef4bf4852ef1ccc00695d39a4f15255233d23535276596d020c330d5");
         consensus.nAuxpowChainId = 0x0001;
         consensus.nAuxpowStartHeight = 10;
         consensus.fStrictChainId = true;
@@ -153,17 +155,19 @@ public:
         nDefaultPort = 9403;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1547910000, 6047180, 0x1e0ffff0, 1, 50 * COIN);
-	
-        //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
-	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
-	      //std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
-	      //std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
-	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
-      
+        genesis = CreateGenesisBlock(1550340000, 6742724, 0x1e0ffff0, 1, 50 * COIN);
+
+        /*
+        std::cout << "genesis.nTime = " << genesis.nTime << '\n';
+	      std::cout << "genesis.nBits = " << genesis.nBits << '\n';
+	      std::cout << "genesis.nNonce = " << genesis.nNonce << '\n';
+	      std::cout << "genesis.GetHash = " << genesis.GetHash().ToString() << '\n';
+	      std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
+        */
+
 	      consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55"));
-        assert(genesis.hashMerkleRoot == uint256S("0x163551b00496e5caa5b92ea849461c1a86fc80f0c9df70bb5c1c316c8a93b048"));
+        assert(consensus.hashGenesisBlock == uint256S("0x00000411ef4bf4852ef1ccc00695d39a4f15255233d23535276596d020c330d5"));
+        assert(genesis.hashMerkleRoot == uint256S("0x568e1d80a26d6ba07b9148d35d5c7090f57685313960d3dc654b74ff7e9c3dd2"));
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("dnsseed.shitcoin.org", false);
@@ -185,7 +189,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x000000069c5400e160c63936f1b85bf549e888306d08484d6dd2a23f957a1e55")},
+                {0, uint256S("0x00000411ef4bf4852ef1ccc00695d39a4f15255233d23535276596d020c330d5")},
             }
         };
 
