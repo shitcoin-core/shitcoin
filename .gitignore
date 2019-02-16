@@ -1,12 +1,6 @@
 *.tar.gz
 
 *.exe
-src/monacoind
-src/monacoin-cli
-src/monacoin-tx
-src/test/test_monacoin
-src/test/test_monacoin_fuzzy
-src/qt/test/test_monacoin-qt
 src/shitcoind
 src/shitcoin-cli
 src/shitcoin-tx
@@ -79,14 +73,12 @@ src/qt/test/moc*.cpp
 # Compilation and Qt preprocessor part
 *.qm
 Makefile
-monacoin-qt
 shitcoin-qt
-Monacoin-Qt.app
 Shitcoin-Qt.app
 
 # Unit-tests
 Makefile.test
-monacoin-qt_test
+shitcoin-qt_test
 
 # Resources cpp
 qrc_*.cpp
@@ -99,7 +91,7 @@ build
 *.gcno
 *.gcda
 /*.info
-test_monacoin.coverage/
+test_shitcoin.coverage/
 total.coverage/
 coverage_percent.txt
 
