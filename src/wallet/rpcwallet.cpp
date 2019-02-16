@@ -3290,11 +3290,11 @@ static const CRPCCommand commands[] =
     { "generating",         "generate",                 &generate,                 true,   {"nblocks","maxtries"} },
     { "mining",             "getauxblock",              &getauxblock,              true,   {"hash", "auxpow"} },
      // Namecoin-specific wallet calls.
-    { "namecoin",           "name_list",                &name_list,                false,  {"name"} },
-    { "namecoin",           "name_new",                 &name_new,                 false,  {"name"} },
-    { "namecoin",           "name_firstupdate",         &name_firstupdate,         false,  {"name","rand","tx","value","toaddress","allow_active"} },
-    { "namecoin",           "name_update",              &name_update,              false,  {"name","value","toaddress"} },
-    { "namecoin",           "sendtoname",               &sendtoname,               false,  {"name","amount","comment","comment_to","subtractfeefromamount"} },
+    { "shitcoin",           "name_list",                &name_list,                false,  {"name"} },
+    { "shitcoin",           "name_new",                 &name_new,                 false,  {"name"} },
+    { "shitcoin",           "name_firstupdate",         &name_firstupdate,         false,  {"name","rand","tx","value","toaddress","allow_active"} },
+    { "shitcoin",           "name_update",              &name_update,              false,  {"name","value","toaddress"} },
+    { "shitcoin",           "sendtoname",               &sendtoname,               false,  {"name","amount","comment","comment_to","subtractfeefromamount"} },
 };
 
 void RegisterWalletRPCCommands(CRPCTable &t)
