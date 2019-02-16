@@ -568,12 +568,12 @@ name_checkdb (const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         okSafeMode
   //  --------------------- ------------------------  -----------------------  ----------
-    { "namecoin",           "name_show",              &name_show,              false,  {"name"} },
-    { "namecoin",           "name_history",           &name_history,           false,  {"name"} },
-    { "namecoin",           "name_scan",              &name_scan,              false,  {"start","count"} },
-    { "namecoin",           "name_filter",            &name_filter,            false,  {"regexp","maxage","from","nb","stat"} },
-    { "namecoin",           "name_pending",           &name_pending,           true,   {"name"} },
-    { "namecoin",           "name_checkdb",           &name_checkdb,           false,  {} },
+    { "shitcoin",           "name_show",              &name_show,              false,  {"name"} },
+    { "shitcoin",           "name_history",           &name_history,           false,  {"name"} },
+    { "shitcoin",           "name_scan",              &name_scan,              false,  {"start","count"} },
+    { "shitcoin",           "name_filter",            &name_filter,            false,  {"regexp","maxage","from","nb","stat"} },
+    { "shitcoin",           "name_pending",           &name_pending,           true,   {"name"} },
+    { "shitcoin",           "name_checkdb",           &name_checkdb,           false,  {} },
 };
 
 void RegisterNameRPCCommands(CRPCTable &t)
