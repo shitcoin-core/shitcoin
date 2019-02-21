@@ -237,7 +237,12 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55"); //160675
+        consensus.defaultAssumeValid = uint256S("0x000006e46ef06f20778d5ce5e23188ba7ef87f9a40aa3e04e696d21e8561ac89"); //160675
+				consensus.nAuxpowChainId = 0x0001;
+        consensus.nAuxpowStartHeight = 10;
+        consensus.fStrictChainId = true;
+        consensus.nLegacyBlocksBefore = 10;
+        consensus.rules.reset(new Consensus::TestNetConsensus());
 
         pchMessageStart[0] = 0xc0;
         pchMessageStart[1] = 0xc0;
@@ -255,7 +260,7 @@ public:
         nPruneAfterHeight = 1000;
         //vAlertPubKey = ParseHex("04887665070e79d20f722857e58ec8f402733f710135521a0b63441419bf5665ba4623bed13fca0cb2338682ab2a54ad13ce07fbc81c3c2f0912a4eb8521dd3cfb");
 
-        genesis = CreateTestnetGenesisBlock(1550664000, 90826, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1550750400, 2532900, 0x1e0ffff0, 1, 50 * COIN);
         
         //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
 	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
@@ -264,7 +269,7 @@ public:
 	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
         
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000006e46ef06f20778d5ce5e23188ba7ef87f9a40aa3e04e696d21e8561ac89"));
         assert(genesis.hashMerkleRoot == uint256S("0x60ff30d05560c7b0b18881ccfbe89cf3183bdb66e409a0e0411f6e74d7fc29e6"));
 
         //vFixedSeeds.clear();
@@ -289,7 +294,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55")},
+                {0, uint256S("0x000006e46ef06f20778d5ce5e23188ba7ef87f9a40aa3e04e696d21e8561ac89")},
             }
         };
 
