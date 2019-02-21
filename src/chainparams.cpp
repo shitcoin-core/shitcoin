@@ -79,8 +79,8 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits
 static CBlock CreateTestnetGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     const char* pszTimestamp = "OP53B is shit!";
-		const CScript genesisInputScript = CScript() << 0x1d00ffff << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
-    const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+		const CScript genesisInputScript = CScript() << 486604799 << CScriptNum(4) << std::vector<unsigned char>((const unsigned char*)pszTimestamp, (const unsigned char*)pszTimestamp + strlen(pszTimestamp));
+    const CScript genesisOutputScript = CScript() << ParseHex("040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9") << OP_CHECKSIG;
     return CreateGenesisBlock(genesisInputScript, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -209,9 +209,9 @@ public:
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 1051200;
         consensus.BIP34Height = 1000000000;
-        consensus.BIP34Hash = uint256S("0");
-        consensus.BIP65Height = -1;
-        consensus.BIP66Height = -1;
+        consensus.BIP34Hash = uint256S("100006c80c9a27ed62e200700b039b2cd2cad259b952653039d6770ad340d369");
+        consensus.BIP65Height = 0;
+        consensus.BIP66Height = 0;
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nPowTargetTimespan = 1.1 * 24 * 60 * 60; // 1.1 days
         consensus.nPowTargetSpacing = 1.5 * 60; // 1.5 minutes
@@ -237,23 +237,25 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000100000");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f"); //160675
+        consensus.defaultAssumeValid = uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55"); //160675
 
-        pchMessageStart[0] = 0xfd;
-        pchMessageStart[1] = 0xd2;
-        pchMessageStart[2] = 0xc8;
-        pchMessageStart[3] = 0xf1;
+        pchMessageStart[0] = 0xc0;
+        pchMessageStart[1] = 0xc0;
+        pchMessageStart[2] = 0xc0;
+        pchMessageStart[3] = 0xc0;
 
+        /*
         // Hardfork params
         nSwitchKGWblock = 0;
         nSwitchDIGIblock = 0;
         nSwitchLyra2REv2_DGW = 0;
+        */
 
         nDefaultPort = 19403;
         nPruneAfterHeight = 1000;
-        vAlertPubKey = ParseHex("04887665070e79d20f722857e58ec8f402733f710135521a0b63441419bf5665ba4623bed13fca0cb2338682ab2a54ad13ce07fbc81c3c2f0912a4eb8521dd3cfb");
+        //vAlertPubKey = ParseHex("04887665070e79d20f722857e58ec8f402733f710135521a0b63441419bf5665ba4623bed13fca0cb2338682ab2a54ad13ce07fbc81c3c2f0912a4eb8521dd3cfb");
 
-        genesis = CreateTestnetGenesisBlock(1547910000, 4340998, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateTestnetGenesisBlock(1550664000, 90826, 0x1e0ffff0, 1, 50 * COIN);
         
         //std::cout << "genesis.nTime = " << genesis.nTime << '\n';
 	      //std::cout << "genesis.nBits = " << genesis.nBits << '\n';
@@ -262,16 +264,16 @@ public:
 	      //std::cout << "genesis.hashMerkleRoot = " << genesis.hashMerkleRoot.GetHex() << '\n';
         
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f"));
-        assert(genesis.hashMerkleRoot == uint256S("0x0923c8ab83e99c392c7bc27a064d34bef5a6478b65034e0346a1982dc5d67604"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55"));
+        assert(genesis.hashMerkleRoot == uint256S("0x60ff30d05560c7b0b18881ccfbe89cf3183bdb66e409a0e0411f6e74d7fc29e6"));
 
-        vFixedSeeds.clear();
-        vSeeds.clear();
+        //vFixedSeeds.clear();
+        //vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
         vSeeds.emplace_back("testnet-dnsseed.shitcoin.org", false);
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,125);
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,100);
         base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,117);
         base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,239);
         base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
@@ -287,7 +289,7 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x000004e468045e6c0bc43dd4f65bf9e6b36b0307692167213ef182fd90e12e7f")},
+                {0, uint256S("0x0000022ac9bac2e75d6867dddc0f076cb30a3170dfa9ec3ce4c4c9af0abc3e55")},
             }
         };
 
